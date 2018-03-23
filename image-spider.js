@@ -8,7 +8,7 @@ var request = require('request');
 //     res.end('hello world\n');
 // }).listen(8000);
 
-var category = ['风光'];
+var category = ['人像'];
 
 var host = "https://tuchong.com/rest/tags";
 var img_host = "https://photo.tuchong.com";
@@ -23,6 +23,8 @@ var req_data = {
     count: 100,
     order: 'weekly'
 };
+
+mkdirsSync(filePath);
 
 for (i = 0; i < max_page; i++) {
     var url = format("{0}/{1}/{2}?page={3}&count={4}&order=weekly&befor", host, category[0], 'posts', req_data.page, req_data.count);
@@ -51,4 +53,25 @@ function saveImage(img_url, callback) {
         console.log(format("dowloaded:{0}", img_url));
         seed++;
     });
+}
+
+// 创建多层文件夹 同步
+function mkdirsSync(dirpath, mode) {
+    if (!fs.existsSync(dirpath)) {
+        let pathtmp
+        dirpath.split(path.sep).forEach(dirname => {
+            if (pathtmp) {
+                pathtmp = path.join(pathtmp, dirname)
+            } else {
+                pathtmp = dirname
+            }
+
+            if (!fs.existsSync(pathtmp)) {
+                if (!fs.mkdirSync(pathtmp, mode)) {
+                    return false
+                }
+            }
+        })
+    }
+    return true
 }
